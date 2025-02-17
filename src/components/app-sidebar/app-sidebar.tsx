@@ -1,11 +1,13 @@
 "use client"
 
 import React from 'react'
-import { Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '../ui/sidebar'
+import { Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar } from '../ui/sidebar'
 import { Bot, CreditCard, LayoutDashboard, Presentation } from 'lucide-react';
 import Link from 'next/link';
 import { cn } from '~/lib/utils';
 import { usePathname } from 'next/navigation';
+import { Card } from '../ui/card';
+import { Button } from '../ui/button';
 
 const menuItems = [
   {
@@ -39,11 +41,19 @@ const projects = [
 
 const AppSideBar = () => {
   const pathname = usePathname()
-
+const {open } = useSidebar()
   return (
+    
+   
     <Sidebar collapsible='icon' variant='floating'>
       <SidebarHeader className="px-4 h-16 flex items-center border-b">
-        <h1 className="text-xl font-semibold">Logo</h1>
+
+       {open ?
+        <h1 className="text-xl font-semibold">Diago<span className='text-primary'>Ai</span></h1>
+      :
+      <h1 className="text-xl font-semibold">D<span className='text-primary'>Ai</span></h1>
+      }
+       
       </SidebarHeader>
       
       <SidebarContent className="mt-4">
@@ -94,33 +104,48 @@ const AppSideBar = () => {
   
   <SidebarGroupContent className="mt-2 px-2 space-y-1">
     <SidebarMenu>
-      {projects.map(project => (
-        <SidebarMenuItem key={project.name} className="list-none">
-          <SidebarMenuButton asChild>
-            <div className="w-full flex items-center gap-3 px-3 py-2.5 rounded-md
-              hover:bg-accent transition-colors
-              group hover:text-accent-foreground
-              text-muted-foreground">
-              
-              <div className="rounded-md size-8 flex items-center justify-center 
-                bg-primary/10 text-primary font-medium
-                group-hover:bg-primary/20 transition-colors">
-                {project.name[0].toUpperCase()}
-              </div>
-              
-              <span className="text-sm font-medium truncate">
-                {project.name}
-              </span>
-            </div>
-          </SidebarMenuButton>
-        </SidebarMenuItem>
-      ))}
+    {projects.map((project) => (
+  <SidebarMenuItem key={project.name} className="list-none">
+    <SidebarMenuButton asChild>
+      <div className="flex items-center gap-2">
+        <div
+          className={cn(
+            "rounded-sm border size-6 flex items-center justify-center text-sm",
+            {
+              "bg-white text-primary": true,
+              "bg-primary text-white": false, // Adjust condition dynamically if needed
+            }
+          )}
+        >
+          {project.name[0]} {/* Displaying only the first letter */}
+        </div>
+        <span>{project.name}</span>
+      </div>
+    </SidebarMenuButton>
+  </SidebarMenuItem>
+))}
+<div className="h-2"></div>
+{open && (
+  <SidebarMenuItem>
+
+
+  <Link href="/create">
+  <Button variant={'outline'} className='w-full'> Create Project</Button>
+  </Link>
+
+</SidebarMenuItem>
+)}
+
+
+
     </SidebarMenu>
   </SidebarGroupContent>
 </SidebarGroup>
       
+      
       </SidebarContent>
     </Sidebar>
+   
   )
 }
 
