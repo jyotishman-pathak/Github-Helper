@@ -8,6 +8,7 @@ import { Form, FormControl, FormField, FormItem, FormMessage } from "~/component
 import { Input } from "~/components/ui/input";
 import { Button } from "~/components/ui/button";
 import { Card, CardHeader, CardTitle } from "~/components/ui/card";
+import { api } from "~/trpc/react";
 
 const formSchema = z.object({
   projectName: z.string().min(1, "Project name is required"),
@@ -16,6 +17,7 @@ const formSchema = z.object({
 });
 
 const CreatePage = () => {
+  const createProject = api.project.createProject.useMutation()
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -27,6 +29,12 @@ const CreatePage = () => {
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     console.log(values);
+  createProject.mutate({
+    name: values.projectName,
+    githubUrl:values.githubUrl,
+    githubToken:values.githubToken
+    
+  })
   }
 
   return (
@@ -93,6 +101,7 @@ const CreatePage = () => {
               />
 
               <Button 
+              disabled= {createProject.isPending}
                 type="submit" 
                 className="w-full md:w-auto px-8 h-12 md:h-14 text-sm md:text-base transition-all"
               >
