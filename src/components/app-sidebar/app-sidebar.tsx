@@ -8,6 +8,7 @@ import { cn } from '~/lib/utils';
 import { usePathname } from 'next/navigation';
 import { Card } from '../ui/card';
 import { Button } from '../ui/button';
+import useProject from '~/hooks/use-project';
 
 const menuItems = [
   {
@@ -31,17 +32,17 @@ const menuItems = [
     icon: CreditCard, 
   },
 ];
-const projects = [
-  { name: "DeLoan" },
-  { name: "Stream-Savvy" },
-  { name: "Almatrack" },
 
-];
 
 
 const AppSideBar = () => {
   const pathname = usePathname()
 const {open } = useSidebar()
+
+const {projects,projectId,setProjectId} = useProject()
+
+
+
   return (
     
    
@@ -101,47 +102,49 @@ const {open } = useSidebar()
   <SidebarGroupLabel className="px-4 text-xs font-medium text-muted-foreground uppercase tracking-wider">
     Your Projects
   </SidebarGroupLabel>
-  
+
   <SidebarGroupContent className="mt-2 px-2 space-y-1">
     <SidebarMenu>
-    {projects.map((project) => (
-  <SidebarMenuItem key={project.name} className="list-none">
-    <SidebarMenuButton asChild>
-      <div className="flex items-center gap-2">
-        <div
-          className={cn(
-            "rounded-sm border size-6 flex items-center justify-center text-sm",
-            {
-              "bg-white text-primary": true,
-              "bg-primary text-white": false, // Adjust condition dynamically if needed
-            }
-          )}
-        >
-          {project.name[0]} {/* Displaying only the first letter */}
-        </div>
-        <span>{project.name}</span>
-      </div>
-    </SidebarMenuButton>
-  </SidebarMenuItem>
-))}
-<div className="h-2"></div>
-{open && (
-  <SidebarMenuItem>
+      {projects?.length ? (
+        projects.map((project) => (
+          <SidebarMenuItem key={project.id} className="list-none">
+            <SidebarMenuButton asChild>
+              <div 
+                className="flex items-center gap-2 cursor-pointer w-full px-3 py-2 rounded-md hover:bg-accent"
+                onClick={() => setProjectId(project.id)}
+              >
+                <div
+                  className={cn(
+                    "rounded-sm border size-6 flex items-center justify-center text-sm font-bold",
+                    projectId === project.id ? "bg-primary text-white" : "bg-white text-primary"
+                  )}
+                >
+                  {project.name[0]} {/* Displaying only the first letter */}
+                </div>
+                <span className="truncate">{project.name}</span>
+              </div>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        ))
+      ) : (
+        <SidebarMenuItem className="text-muted-foreground px-3 py-2 text-sm">
+          No projects found.
+        </SidebarMenuItem>
+      )}
 
+      <div className="h-2"></div>
 
-  <Link href="/create">
-  <Button variant={'outline'} className='w-full'> Create Project</Button>
-  </Link>
-
-</SidebarMenuItem>
-)}
-
-
-
+      {open && (
+        <SidebarMenuItem>
+          <Link href="/create">
+            <Button variant="outline" className="w-full">Create Project</Button>
+          </Link>
+        </SidebarMenuItem>
+      )}
     </SidebarMenu>
   </SidebarGroupContent>
 </SidebarGroup>
-      
+    
       
       </SidebarContent>
     </Sidebar>

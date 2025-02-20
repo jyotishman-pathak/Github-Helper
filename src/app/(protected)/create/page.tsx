@@ -9,6 +9,9 @@ import { Input } from "~/components/ui/input";
 import { Button } from "~/components/ui/button";
 import { Card, CardHeader, CardTitle } from "~/components/ui/card";
 import { api } from "~/trpc/react";
+import UseRefetch from "~/hooks/use-Refetch";
+import { toast } from "sonner"
+
 
 const formSchema = z.object({
   projectName: z.string().min(1, "Project name is required"),
@@ -17,7 +20,9 @@ const formSchema = z.object({
 });
 
 const CreatePage = () => {
+ 
   const createProject = api.project.createProject.useMutation()
+  const refetch = UseRefetch();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -26,15 +31,25 @@ const CreatePage = () => {
       githubToken: "",
     },
   });
-
   function onSubmit(values: z.infer<typeof formSchema>) {
     console.log(values);
-  createProject.mutate({
-    name: values.projectName,
-    githubUrl:values.githubUrl,
-    githubToken:values.githubToken
-    
-  })
+  
+    createProject.mutate(
+      {
+        name: values.projectName,
+        githubUrl: values.githubUrl,
+        githubToken: values.githubToken,
+      },
+      {
+        onSuccess: () => {
+          toast.success("Project created successfully!");
+          refetch();
+        },
+        onError: (error) => {
+          toast.error(`Failed to create project: ${error.message}`);
+        },
+      }
+    );
   }
 
   return (
