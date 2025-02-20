@@ -6,6 +6,7 @@ import { Card } from '~/components/ui/card';
 import useProject from '~/hooks/use-project';
 import { ExternalLink, Github } from 'lucide-react';
 import Link from 'next/link';
+import CommitLog from '~/components/app-sidebar/CommitLog';
 const DashboardPage = () => {
   
   const {user} = useUser();
@@ -55,7 +56,7 @@ const DashboardPage = () => {
 
 <div className="mt-8">
   <div className="">
-    commit log
+ <CommitLog/>
   </div>
 </div>
 
