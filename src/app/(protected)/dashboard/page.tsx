@@ -7,6 +7,7 @@ import useProject from '~/hooks/use-project';
 import { ExternalLink, Github } from 'lucide-react';
 import Link from 'next/link';
 import CommitLog from '~/components/app-sidebar/CommitLog';
+import AskQuestionCard from '~/components/app-sidebar/ask-Question-card';
 
 const DashboardPage = () => {
   const { user } = useUser();
@@ -45,8 +46,8 @@ const DashboardPage = () => {
       <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-4">
         {/* Ask Question Card */}
         <Card className="p-6">
-          <h3 className="text-lg font-semibold">Ask Question</h3>
-          {/* Add question form/content here */}
+        
+          <AskQuestionCard/>
         </Card>
 
         {/* Meeting Card */}
