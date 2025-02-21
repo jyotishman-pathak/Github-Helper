@@ -133,4 +133,3 @@ async function filterUnprocessedCommits(projectId: string, commitHashes : Respon
 }
 
 
-// PollCommits('cm7dmna750000nqv1bgpbob6r').then(console.log)
